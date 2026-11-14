@@ -144,6 +144,49 @@ export function SettingsPage() {
         </Panel>
 
         <div className="space-y-3">
+          <Panel title="Your profile" subtitle="Identity and permissions for this session">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-accent/15 text-[13px] font-semibold text-accent-soft">
+                  {(session?.user.name ?? session?.user.email ?? '?')
+                    .split(/\s+/)
+                    .map((part) => part[0])
+                    .join('')
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <div className="truncate text-[13px] font-medium text-slate-100">
+                    {session?.user.name ?? session?.user.email}
+                  </div>
+                  <div className="truncate text-[11.5px] text-slate-500">{session?.user.email}</div>
+                </div>
+                <Badge tone={session?.user.role === 'admin' ? 'violet' : 'muted'}>{session?.user.role}</Badge>
+              </div>
+              <dl className="grid grid-cols-2 gap-2 text-[11.5px]">
+                <div>
+                  <dt className="text-[10px] uppercase tracking-wider text-slate-600">Permissions</dt>
+                  <dd className="mt-0.5 text-slate-300">{session?.permissions.length ?? 0} granted</dd>
+                </div>
+                <div>
+                  <dt className="text-[10px] uppercase tracking-wider text-slate-600">Session</dt>
+                  <dd className="mt-0.5 text-slate-300">HTTP-only cookie</dd>
+                </div>
+              </dl>
+              <div className="flex flex-wrap gap-1">
+                {(session?.permissions ?? []).slice(0, 8).map((permission) => (
+                  <span
+                    key={permission}
+                    className="mono rounded border border-line bg-surface-900 px-1.5 py-0.5 text-[10px] text-slate-400"
+                  >
+                    {permission}
+                  </span>
+                ))}
+              </div>
+              <Button onClick={() => void signOut()}>Sign out of this session</Button>
+            </div>
+          </Panel>
+
           <Panel title="MCP HTTP bearer token" subtitle="Protects the platform's own Streamable HTTP endpoint">
             <div className="space-y-3">
               <div className="flex items-center justify-between rounded-lg border border-line bg-surface-900 px-3 py-2">

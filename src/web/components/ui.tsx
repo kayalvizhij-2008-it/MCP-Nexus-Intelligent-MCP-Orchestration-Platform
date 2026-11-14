@@ -54,8 +54,8 @@ export function Button({
   children,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'default' | 'primary' | 'ghost' | 'danger';
-  size?: 'sm' | 'icon';
+  variant?: 'default' | 'primary' | 'ghost' | 'danger' | 'outline';
+  size?: 'sm' | 'icon' | 'lg';
   loading?: boolean;
 }) {
   return (
@@ -67,8 +67,10 @@ export function Button({
         variant === 'primary' && 'btn-primary',
         variant === 'ghost' && 'btn-ghost',
         variant === 'danger' && 'btn-danger',
+        variant === 'outline' && 'btn-outline',
         size === 'sm' && 'btn-sm',
         size === 'icon' && 'btn-icon',
+        size === 'lg' && 'btn-lg',
         className,
       )}
     >

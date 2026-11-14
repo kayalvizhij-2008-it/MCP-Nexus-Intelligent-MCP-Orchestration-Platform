@@ -183,6 +183,7 @@ export function SecurityPage() {
                 ) : null
               }
             >
+              <div className="overflow-x-auto">
               <table className="table">
                 <thead>
                   <tr>
@@ -228,6 +229,7 @@ export function SecurityPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </Panel>
 
             <Panel title="Role matrix" subtitle="Permission grants per role" flush>
@@ -267,6 +269,7 @@ export function SecurityPage() {
               ) : null
             }
           >
+            <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
@@ -302,6 +305,7 @@ export function SecurityPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </Panel>
         )}
 
@@ -347,6 +351,7 @@ export function SecurityPage() {
 
         {tab === 'sessions' && (
           <Panel title="Active sessions" subtitle="Server-side sessions; revoking signs the browser out" flush>
+            <div className="overflow-x-auto">
             <table className="table">
               <thead>
                 <tr>
@@ -385,6 +390,7 @@ export function SecurityPage() {
                 )}
               </tbody>
             </table>
+            </div>
           </Panel>
         )}
 
@@ -454,7 +460,7 @@ export function SecurityPage() {
               </div>
             </Panel>
             <Panel title="Audit trail" subtitle="Every mutating API action is recorded" flush>
-              <div className="max-h-[420px] overflow-y-auto">
+              <div className="max-h-[420px] overflow-auto">
                 <table className="table">
                   <thead>
                     <tr>

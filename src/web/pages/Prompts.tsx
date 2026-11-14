@@ -109,6 +109,7 @@ function ServerPrompts() {
             icon={<FileText size={16} />}
           />
         ) : (
+          <div className="overflow-x-auto">
           <table className="table">
             <thead>
               <tr>
@@ -148,6 +149,7 @@ function ServerPrompts() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </Panel>
 

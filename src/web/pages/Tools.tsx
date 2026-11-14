@@ -224,8 +224,8 @@ export function ToolsPage() {
                 }
               >
                 <div className="grid gap-4 lg:grid-cols-2">
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
+                  <div className="min-w-0">
+                    <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <span className="section-title">Arguments</span>
                       <div className="flex items-center gap-1">
                         <Button size="sm" variant={rawMode ? 'default' : 'ghost'} onClick={() => setRawMode(false)}>
@@ -272,8 +272,8 @@ export function ToolsPage() {
                     )}
                   </div>
 
-                  <div>
-                    <div className="mb-2 flex items-center justify-between">
+                  <div className="min-w-0">
+                    <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <span className="section-title">Input schema</span>
                       <Badge tone="muted">
                         {summary.required.length} required / {summary.count} props

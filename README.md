@@ -22,6 +22,18 @@ control plane with authentication, RBAC, approval gates, audit trails and real m
 | --- | --- |
 | ![Execution history](docs/screenshots/03-execution-history.png) | ![Configuration versions](docs/screenshots/04-configuration-versions.png) |
 
+| Landing (hero + 3D) | Landing (mobile) |
+| --- | --- |
+| ![Landing hero](docs/screenshots/05-landing-hero.png) | ![Landing mobile](docs/screenshots/07-landing-mobile.png) |
+
+| MCP Servers (new shell) | Executions (new) |
+| --- | --- |
+| ![MCP Servers](docs/screenshots/08-servers.png) | ![Executions](docs/screenshots/09-executions.png) |
+
+| Approvals | Mobile navigation |
+| --- | --- |
+| ![Approvals](docs/screenshots/10-approvals.png) | ![Mobile drawer](docs/screenshots/12-mobile-drawer.png) |
+
 ## A note on the original backend
 
 The workspace this project was built in contained **no pre-existing MCP server implementation, no frontend and
