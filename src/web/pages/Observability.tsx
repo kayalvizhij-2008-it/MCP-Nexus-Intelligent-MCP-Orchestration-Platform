@@ -102,6 +102,7 @@ export function ObservabilityPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Operations"
         title="Observability"
         subtitle="Everything here is computed from persisted execution records — no synthetic metrics."
         actions={

@@ -7,7 +7,7 @@ import { Button, EmptyState, Panel } from '../components/ui.js';
 export function NotFoundPage() {
   return (
     <div className="fade-in">
-      <PageHeader title="Page not found" subtitle="The route you requested does not exist in this control plane." />
+      <PageHeader eyebrow="404" title="Page not found" subtitle="The route you requested does not exist in this control plane." />
       <Panel>
         <EmptyState
           icon={<Compass size={20} />}

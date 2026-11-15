@@ -135,6 +135,7 @@ export function ToolsPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Infrastructure"
         title="Tool Explorer"
         subtitle="Every tool is discovered over MCP. Arguments are validated against the live JSON schema, then executed with a real tools/call."
         actions={

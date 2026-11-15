@@ -1,4 +1,5 @@
 import { Check, ChevronDown, Copy, Loader2 } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { cn } from '../lib/format.js';
 
@@ -324,5 +325,224 @@ export function InlineSpinner({ label = 'Working' }: { label?: string }) {
       <Loader2 size={12} className="animate-spin" />
       {label}
     </span>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Atmosphere                                                                */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The flowing background used behind the whole application.
+ *
+ * Three blurred colour fields drift on independent CSS timelines (transform
+ * only, so the compositor handles them). Rendering pauses when the tab is
+ * hidden, and the CSS reduced-motion rule collapses every animation.
+ */
+export function AnimatedBackdrop() {
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const onVisibility = () => setPaused(document.hidden);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
+
+  return (
+    <div className="aurora-stage" data-paused={paused ? 'true' : 'false'} aria-hidden>
+      <div className="aurora-field aurora-field-a" />
+      <div className="aurora-field aurora-field-b" />
+      <div className="aurora-field aurora-field-c" />
+      <div className="grain" />
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Motion wrappers                                                           */
+/* -------------------------------------------------------------------------- */
+
+/** Scroll-triggered entrance. Visible immediately when motion is reduced. */
+export function Reveal({
+  children,
+  className,
+  delay = 0,
+  y = 18,
+  once = true,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  y?: number;
+  once?: boolean;
+}) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={reduced ? false : { opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once, margin: '-70px' }}
+      transition={{ duration: 0.62, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+/** Staggers direct children on first view. */
+export function RevealGroup({
+  children,
+  className,
+  stagger = 0.07,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  stagger?: number;
+}) {
+  const reduced = useReducedMotion();
+  return (
+    <motion.div
+      className={className}
+      initial={reduced ? false : 'hidden'}
+      whileInView="show"
+      viewport={{ once: true, margin: '-60px' }}
+      variants={{
+        hidden: {},
+        show: { transition: { staggerChildren: stagger } },
+      }}
+    >
+      {React.Children.map(children, (child) => (
+        <motion.div
+          variants={{
+            hidden: reduced ? {} : { opacity: 0, y: 16 },
+            show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+          }}
+          className="min-w-0"
+        >
+          {child}
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  3D interaction surfaces                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Perspective tilt + pointer-following light.
+ *
+ * Pointer input only (touch keeps the flat card) and disabled entirely under
+ * prefers-reduced-motion. The spotlight is a sibling overlay so its radial
+ * gradient can never intercept clicks.
+ */
+export function TiltCard({
+  children,
+  className,
+  maxTilt = 7,
+  spotlight = true,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  maxTilt?: number;
+  spotlight?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
+  const active = useRef(false);
+
+  const onPointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (reduced || event.pointerType !== 'mouse') return;
+      const node = ref.current;
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width;
+      const py = (event.clientY - rect.top) / rect.height;
+      if (!active.current) {
+        node.dataset.active = 'true';
+        active.current = true;
+      }
+      node.style.setProperty('--tilt-y', `${((px - 0.5) * maxTilt * 2).toFixed(2)}deg`);
+      node.style.setProperty('--tilt-x', `${((0.5 - py) * maxTilt * 2).toFixed(2)}deg`);
+      node.style.setProperty('--spot-x', `${(px * 100).toFixed(1)}%`);
+      node.style.setProperty('--spot-y', `${(py * 100).toFixed(1)}%`);
+    },
+    [maxTilt, reduced],
+  );
+
+  const reset = useCallback(() => {
+    const node = ref.current;
+    if (!node) return;
+    node.dataset.active = 'false';
+    active.current = false;
+    node.style.setProperty('--tilt-x', '0deg');
+    node.style.setProperty('--tilt-y', '0deg');
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={cn('tilt-card relative', className)}
+      onPointerMove={onPointerMove}
+      onPointerLeave={reset}
+      onPointerCancel={reset}
+    >
+      {spotlight && <span className="tilt-spot" aria-hidden />}
+      <div className="relative">{children}</div>
+    </div>
+  );
+}
+
+/**
+ * Real 3D flip surface with genuine perspective and hidden backfaces.
+ *
+ * Flip is user-driven only (button / tap), so scrolling can never flip a card.
+ * The control is a real button, so it is keyboard and screen-reader operable.
+ */
+export function FlipCard({
+  front,
+  back,
+  className,
+  minHeight = 208,
+  flipLabel = 'Show details',
+  backLabel = 'Back to summary',
+}: {
+  front: (flip: () => void) => React.ReactNode;
+  back: (unflip: () => void) => React.ReactNode;
+  className?: string;
+  minHeight?: number;
+  flipLabel?: string;
+  backLabel?: string;
+}) {
+  const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    if (!flipped) return;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setFlipped(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [flipped]);
+
+  return (
+    <div
+      className={cn('flip', className)}
+      data-flipped={flipped ? 'true' : 'false'}
+      style={{ minHeight }}
+      aria-label={flipped ? backLabel : flipLabel}
+    >
+      <div className="flip-inner">
+        <div className="flip-face h-full">
+          {front(() => setFlipped(true))}
+        </div>
+        <div className="flip-face flip-back h-full" aria-hidden={!flipped}>
+          {back(() => setFlipped(false))}
+        </div>
+      </div>
+    </div>
   );
 }

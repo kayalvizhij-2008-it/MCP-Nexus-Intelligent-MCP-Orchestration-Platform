@@ -28,7 +28,7 @@ import { api } from '../lib/api.js';
 import { cn } from '../lib/format.js';
 import { useApi } from '../lib/useApi.js';
 import { CommandPalette } from './CommandPalette.js';
-import { CommandButton, IconButton, Tooltip } from './interactions.js';
+import { AnimatedBackdrop, CommandButton, IconButton, Tooltip } from './interactions.js';
 import { Badge, Dot } from './ui.js';
 
 const NAV = [
@@ -87,21 +87,21 @@ const LABELS: Record<string, string> = {
 function Brand({ collapsed }: { collapsed?: boolean }) {
   return (
     <div className={cn('flex items-center gap-2.5', collapsed && 'justify-center')}>
-      <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden className="shrink-0">
+      <svg width="27" height="27" viewBox="0 0 32 32" fill="none" aria-hidden className="shrink-0">
         <path
           d="M16 3.5l10.5 6.2v12.6L16 28.5 5.5 22.3V9.7z"
           stroke="url(#nexus-grad-nav)"
           strokeWidth="1.7"
           strokeLinejoin="round"
         />
-        <circle cx="16" cy="16" r="3.1" fill="#9b8cff" />
-        <circle cx="16" cy="8" r="1.3" fill="#36c9f0" />
-        <circle cx="23" cy="20" r="1.3" fill="#36c9f0" />
-        <circle cx="9" cy="20" r="1.3" fill="#36c9f0" />
+        <circle cx="16" cy="16" r="3.1" fill="#16b8a6" />
+        <circle cx="16" cy="8" r="1.3" fill="#69d6f5" />
+        <circle cx="23" cy="20" r="1.3" fill="#69d6f5" />
+        <circle cx="9" cy="20" r="1.3" fill="#ff8066" />
         <defs>
           <linearGradient id="nexus-grad-nav" x1="4" y1="4" x2="28" y2="28">
-            <stop stopColor="#9b8cff" />
-            <stop offset="1" stopColor="#36c9f0" />
+            <stop stopColor="#5fe3d1" />
+            <stop offset="1" stopColor="#69d6f5" />
           </linearGradient>
         </defs>
       </svg>
@@ -152,7 +152,7 @@ function UserMenu() {
         aria-expanded={open}
         className="flex items-center gap-2 rounded-lg border border-line bg-surface-850 px-2 py-1.5 transition-colors hover:border-line-strong"
       >
-        <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-accent to-sky text-[10px] font-bold text-white">
+        <span className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-accent to-ice text-[10px] font-bold text-[#04211d]">
           {initials || 'N'}
         </span>
         <span className="hidden leading-tight text-left sm:block">
@@ -225,7 +225,8 @@ function SidebarNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?
                       layoutId="nav-active-surface"
                       className="absolute inset-0 -z-10 rounded-lg"
                       style={{
-                        background: 'linear-gradient(90deg, rgba(124,92,255,0.16), rgba(124,92,255,0.03))',
+                        background: 'linear-gradient(90deg, rgba(22,184,166,0.2), rgba(105,214,245,0.05))',
+                        boxShadow: 'inset 0 0 0 1px rgba(22,184,166,0.12)',
                       }}
                       transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                     />
@@ -334,13 +335,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen bg-surface-950">
+    <div className="relative flex min-h-screen bg-surface-950">
+      <AnimatedBackdrop />
       {/* desktop sidebar */}
       <motion.aside
         animate={{ width: collapsed ? 68 : 236 }}
         transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 320, damping: 34 }}
-        className="sticky top-0 hidden h-screen shrink-0 border-r border-line bg-surface-900/70 backdrop-blur-xl lg:block"
+        className="sticky top-0 z-20 hidden h-screen shrink-0 border-r border-line bg-surface-900/75 backdrop-blur-xl lg:block"
       >
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-accent/25 via-transparent to-transparent" />
         <div className="flex h-full flex-col">
           <div className={cn('flex items-center justify-between px-4 pb-2 pt-4', collapsed && 'px-2')}>
             <Brand collapsed={collapsed} />
@@ -432,8 +435,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         )}
       </AnimatePresence>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex h-[52px] items-center justify-between gap-3 border-b border-line bg-surface-950/85 px-3 backdrop-blur-xl sm:px-5">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-30 flex h-[54px] items-center justify-between gap-3 border-b border-line/80 bg-surface-950/70 px-3 backdrop-blur-xl sm:px-5">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px top-hairline opacity-40" />
           <div className="flex min-w-0 items-center gap-2.5">
             <button
               ref={menuButtonRef}
@@ -466,12 +470,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        <main className="min-w-0 flex-1 px-3 py-4 sm:px-5 sm:py-6">
+        <main className="relative min-w-0 flex-1 px-3 py-4 sm:px-5 sm:py-6">
           <motion.div
             key={location.pathname}
-            initial={reduced ? false : { opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            initial={reduced ? false : { opacity: 0, y: 10, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
             className="mx-auto w-full max-w-[1400px]"
           >
             {children}
@@ -496,9 +500,16 @@ export function PageHeader({
   eyebrow?: string;
 }) {
   return (
-    <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+    <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-line/60 pb-4">
       <div className="min-w-0">
-        {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
+        {eyebrow && (
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/[0.07] px-2.5 py-1">
+            <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(22,184,166,0.9)]" />
+            <span className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-accent-soft">
+              {eyebrow}
+            </span>
+          </div>
+        )}
         <h1 className="page-title">{title}</h1>
         {subtitle && <p className="page-sub max-w-2xl">{subtitle}</p>}
       </div>

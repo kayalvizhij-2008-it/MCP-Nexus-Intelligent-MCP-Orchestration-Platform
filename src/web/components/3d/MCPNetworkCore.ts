@@ -42,17 +42,17 @@ export function createNetworkCore(options: { nodeCount?: number; radius?: number
 
   const shellGeometry = new THREE.IcosahedronGeometry(0.98, 1);
   const shellMaterial = new THREE.MeshBasicMaterial({
-    color: 0x7c5cff,
+    color: 0x16b8a6,
     wireframe: true,
     transparent: true,
-    opacity: 0.42,
+    opacity: 0.4,
   });
   const shell = new THREE.Mesh(shellGeometry, shellMaterial);
   group.add(shell);
 
   const coreGeometry = new THREE.IcosahedronGeometry(0.58, 3);
   const coreMaterial = new THREE.MeshBasicMaterial({
-    color: 0x9b8cff,
+    color: 0x5fe3d1,
     transparent: true,
     opacity: 0.26,
     blending: THREE.AdditiveBlending,
@@ -63,7 +63,7 @@ export function createNetworkCore(options: { nodeCount?: number; radius?: number
 
   const haloGeometry = new THREE.SphereGeometry(1.45, 32, 32);
   const haloMaterial = new THREE.MeshBasicMaterial({
-    color: 0x36c9f0,
+    color: 0x69d6f5,
     transparent: true,
     opacity: 0.05,
     blending: THREE.AdditiveBlending,
@@ -75,9 +75,9 @@ export function createNetworkCore(options: { nodeCount?: number; radius?: number
 
   const ringGeometry = new THREE.TorusGeometry(1.55, 0.004, 8, 128);
   const ringMaterial = new THREE.MeshBasicMaterial({
-    color: 0x36c9f0,
+    color: 0x69d6f5,
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.32,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   });
@@ -89,11 +89,15 @@ export function createNetworkCore(options: { nodeCount?: number; radius?: number
   group.add(ringA, ringB);
 
   const nodeGeometry = new THREE.OctahedronGeometry(0.055, 0);
-  const nodeMaterialWarm = new THREE.MeshBasicMaterial({ color: 0x9b8cff });
-  const nodeMaterialCool = new THREE.MeshBasicMaterial({ color: 0x36c9f0 });
+  const nodeMaterialWarm = new THREE.MeshBasicMaterial({ color: 0x5fe3d1 });
+  const nodeMaterialCool = new THREE.MeshBasicMaterial({ color: 0x69d6f5 });
+  const nodeMaterialAccent = new THREE.MeshBasicMaterial({ color: 0xff8066 });
 
   nodes.forEach((position, index) => {
-    const mesh = new THREE.Mesh(nodeGeometry, index % 2 === 0 ? nodeMaterialWarm : nodeMaterialCool);
+    const mesh = new THREE.Mesh(
+      nodeGeometry,
+      index === 2 ? nodeMaterialAccent : index % 2 === 0 ? nodeMaterialWarm : nodeMaterialCool,
+    );
     mesh.position.copy(position);
     nodeMeshes.push(mesh);
     group.add(mesh);
@@ -130,6 +134,7 @@ export function createNetworkCore(options: { nodeCount?: number; radius?: number
     nodeGeometry.dispose();
     nodeMaterialWarm.dispose();
     nodeMaterialCool.dispose();
+    nodeMaterialAccent.dispose();
   };
 
   return { object: group, update, dispose, nodes, nodeMeshes };

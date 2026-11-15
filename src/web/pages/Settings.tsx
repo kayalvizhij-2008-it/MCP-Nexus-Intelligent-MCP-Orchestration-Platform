@@ -95,6 +95,7 @@ export function SettingsPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Workspace"
         title="Settings"
         subtitle="Platform behaviour, the HTTP MCP bearer token, runtime information and your own credentials."
         actions={<Badge tone="muted">{session?.user.role}</Badge>}

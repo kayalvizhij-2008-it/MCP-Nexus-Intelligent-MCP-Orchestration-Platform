@@ -65,6 +65,7 @@ export function DeploymentsPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Operations"
         title="Deployment Center"
         subtitle="Readiness checks run against this instance: runtime, database, migrations, MCP SDK and server connectivity."
         actions={

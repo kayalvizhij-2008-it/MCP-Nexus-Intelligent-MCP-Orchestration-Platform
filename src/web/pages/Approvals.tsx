@@ -83,6 +83,29 @@ export function ApprovalsPage() {
         }
       />
 
+      {/* human-in-the-loop gate band */}
+      <div className="panel mb-3 flex flex-wrap items-center gap-3 border-coral/20 px-4 py-3">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-coral/25 bg-coral/[0.08] text-coral">
+          <ShieldCheck size={15} />
+        </span>
+        <div className="min-w-0">
+          <div className="text-[12px] font-medium text-slate-200">Human-in-the-loop gate</div>
+          <div className="mt-0.5 text-[10.5px] text-slate-500">
+            Sensitive tools never reach a server until a decision is recorded here.
+          </div>
+        </div>
+        <div className="ml-auto flex flex-wrap items-center gap-1.5">
+          {['arguments bound to the request', 'consumed exactly once', 'every decision audited'].map((fact) => (
+            <span
+              key={fact}
+              className="rounded-full border border-line bg-surface-900/70 px-2 py-0.5 text-[9.5px] text-slate-500"
+            >
+              {fact}
+            </span>
+          ))}
+        </div>
+      </div>
+
       {data.error ? (
         <ErrorState error={data.error} onRetry={data.reload} />
       ) : data.loading && !data.data ? (

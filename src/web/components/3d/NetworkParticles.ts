@@ -21,7 +21,7 @@ export function createNetworkParticles(options: { count?: number; spread?: numbe
   geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
   const material = new THREE.PointsMaterial({
-    color: 0x8fa6d8,
+    color: 0x9dc3d8,
     size: 0.026,
     transparent: true,
     opacity: 0.55,

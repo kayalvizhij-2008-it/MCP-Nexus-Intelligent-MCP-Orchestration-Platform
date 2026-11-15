@@ -16,7 +16,7 @@ import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App.js';
 import { PageHeader } from '../components/Layout.js';
-import { ActionMenu, SegmentedControl } from '../components/interactions.js';
+import { ActionMenu, FlipCard, SegmentedControl, TiltCard } from '../components/interactions.js';
 import {
   Badge,
   Button,
@@ -248,111 +248,174 @@ export function ServersPage() {
       {filtered.length > 0 && (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((server) => (
-            <article
+            <FlipCard
               key={server.id}
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface-850/70 p-4 transition-colors duration-200 hover:border-line-strong"
-            >
-              <div
-                className={`absolute inset-x-0 top-0 h-[2px] ${
-                  server.status === 'running'
-                    ? 'bg-gradient-to-r from-ok/70 to-transparent'
-                    : server.status === 'error'
-                      ? 'bg-gradient-to-r from-err/70 to-transparent'
-                      : 'bg-line'
-                }`}
-                aria-hidden
-              />
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <Link
-                    to={`/servers/${server.id}`}
-                    className="flex items-center gap-1.5 text-[13.5px] font-semibold text-slate-100 transition-colors hover:text-white"
-                  >
-                    <span className="truncate">{server.name}</span>
-                    <ArrowUpRight size={12} className="shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
-                  </Link>
-                  <div className="mono mt-0.5 truncate text-[10px] text-slate-500">{server.slug}</div>
-                </div>
-                <div className="flex shrink-0 items-center gap-1.5">
-                  <Badge tone={server.transport === 'http' ? 'violet' : 'muted'}>
-                    {server.transport.toUpperCase()}
-                  </Badge>
-                  <StatusBadge status={server.status} />
-                </div>
-              </div>
+              minHeight={244}
+              flipLabel={`Show ${server.name} specifications`}
+              backLabel={`Back to ${server.name} summary`}
+              front={(flip) => (
+                <TiltCard maxTilt={5} className="h-full">
+                  <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-line bg-surface-850/70 p-4 transition-colors duration-200 hover:border-line-strong">
+                    <div
+                      className={`absolute inset-x-0 top-0 h-[2px] ${
+                        server.status === 'running'
+                          ? 'bg-gradient-to-r from-accent via-ice/70 to-transparent'
+                          : server.status === 'error'
+                            ? 'bg-gradient-to-r from-err via-coral/60 to-transparent'
+                            : 'bg-line'
+                      }`}
+                      aria-hidden
+                    />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <Link
+                          to={`/servers/${server.id}`}
+                          className="flex items-center gap-1.5 text-[13.5px] font-semibold text-slate-100 transition-colors hover:text-white"
+                        >
+                          <span className="truncate">{server.name}</span>
+                          <ArrowUpRight size={12} className="shrink-0 opacity-0 transition-opacity group-hover:opacity-60" />
+                        </Link>
+                        <div className="mono mt-0.5 truncate text-[10px] text-slate-500">{server.slug}</div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-1.5">
+                        <Badge tone={server.transport === 'http' ? 'violet' : 'muted'}>
+                          {server.transport.toUpperCase()}
+                        </Badge>
+                        <StatusBadge status={server.status} />
+                      </div>
+                    </div>
 
-              <p className="mt-2.5 line-clamp-2 min-h-[30px] text-[11.5px] leading-relaxed text-slate-400">
-                {server.description || 'No description provided.'}
-              </p>
+                    <p className="mt-2.5 line-clamp-2 min-h-[30px] text-[11.5px] leading-relaxed text-slate-400">
+                      {server.description || 'No description provided.'}
+                    </p>
 
-              {server.lastError && (
-                <div className="mt-2 rounded-md border border-err/25 bg-err/5 px-2 py-1.5 text-[10.5px] leading-relaxed text-err/90">
-                  {server.lastError.slice(0, 140)}
+                    {server.lastError && (
+                      <div className="mt-2 rounded-md border border-err/25 bg-err/5 px-2 py-1.5 text-[10.5px] leading-relaxed text-coral-soft">
+                        {server.lastError.slice(0, 140)}
+                      </div>
+                    )}
+
+                    <div className="mt-3 grid grid-cols-3 gap-2 border-t border-line pt-2.5 text-[11px]">
+                      {[
+                        { icon: Wrench, value: server.counts.tools, label: 'tools' },
+                        { icon: FolderTree, value: server.counts.resources, label: 'resources' },
+                        { icon: MessageSquareCode, value: server.counts.prompts, label: 'prompts' },
+                      ].map((item) => (
+                        <div key={item.label} className="flex items-center gap-1.5 text-slate-400">
+                          <item.icon size={11} className="text-slate-600" />
+                          <span className="mono text-slate-300">{item.value}</span>
+                          <span className="text-[10px] text-slate-600">{item.label}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+                      <button
+                        type="button"
+                        onClick={flip}
+                        className="inline-flex items-center gap-1 text-[10.5px] font-medium text-accent-soft transition-colors hover:text-accent"
+                      >
+                        <RotateCw size={10} /> Specs
+                      </button>
+                      <div className="flex items-center gap-1">
+                        {canManage &&
+                          (server.connected ? (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                loading={busyId === server.id}
+                                onClick={() => void control(server, 'restart')}
+                                title="Restart server"
+                              >
+                                <RotateCw size={12} />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                loading={busyId === server.id}
+                                onClick={() => void control(server, 'stop')}
+                                title="Stop server"
+                              >
+                                <Square size={12} />
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              loading={busyId === server.id}
+                              onClick={() => void control(server, 'start')}
+                              title="Start server"
+                            >
+                              <Play size={12} /> Start
+                            </Button>
+                          ))}
+                        <ActionMenu
+                          label={`${server.name} actions`}
+                          items={[
+                            { label: 'Open workspace', onSelect: () => navigate(`/servers/${server.id}`) },
+                            { label: 'Export configuration', onSelect: () => void exportBundle(server) },
+                          ]}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                </TiltCard>
+              )}
+              back={(unflip) => (
+                <div className="panel panel-signal flex h-full flex-col overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-line/80 px-4 py-2.5">
+                    <span className="truncate text-[12px] font-semibold text-slate-100">{server.name}</span>
+                    <StatusBadge status={server.status} />
+                  </div>
+                  <dl className="flex-1 space-y-2 px-4 py-3 text-[11px]">
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Transport</dt>
+                      <dd className="mono text-slate-300">{server.transport.toUpperCase()}</dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Endpoint</dt>
+                      <dd className="mono truncate text-slate-300">
+                        {server.transport === 'http' ? server.url : `${server.command ?? '—'} ${server.args.join(' ')}`}
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Protocol</dt>
+                      <dd className="mono text-slate-300">{server.protocolVersion ?? 'not negotiated'}</dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Server version</dt>
+                      <dd className="mono text-slate-300">{server.serverInfo.version ?? '—'}</dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Secrets</dt>
+                      <dd className="mono text-slate-300">
+                        {server.envKeys.length} env · {server.headerKeys.length} header
+                      </dd>
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <dt className="text-slate-500">Last connected</dt>
+                      <dd className="text-slate-300">
+                        {server.lastConnectedAt ? timeAgo(server.lastConnectedAt) : 'never'}
+                      </dd>
+                    </div>
+                  </dl>
+                  <div className="flex items-center justify-between gap-2 border-t border-line/80 px-4 py-2.5">
+                    <button
+                      type="button"
+                      onClick={unflip}
+                      className="text-[10.5px] font-medium text-slate-400 transition-colors hover:text-slate-100"
+                    >
+                      Back
+                    </button>
+                    <Link to={`/servers/${server.id}`} className="btn btn-sm btn-primary">
+                      Open workspace <ArrowUpRight size={11} />
+                    </Link>
+                  </div>
                 </div>
               )}
-
-              <div className="mt-3 grid grid-cols-3 gap-2 border-t border-line pt-2.5 text-[11px]">
-                {[
-                  { icon: Wrench, value: server.counts.tools, label: 'tools' },
-                  { icon: FolderTree, value: server.counts.resources, label: 'resources' },
-                  { icon: MessageSquareCode, value: server.counts.prompts, label: 'prompts' },
-                ].map((item) => (
-                  <div key={item.label} className="flex items-center gap-1.5 text-slate-400">
-                    <item.icon size={11} className="text-slate-600" />
-                    <span className="mono text-slate-300">{item.value}</span>
-                    <span className="text-[10px] text-slate-600">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-3 flex items-center justify-between gap-2">
-                <span className="text-[10.5px] text-slate-600">
-                  {server.lastConnectedAt ? `connected ${timeAgo(server.lastConnectedAt)}` : 'never connected'}
-                </span>
-                <div className="flex items-center gap-1">
-                  {canManage &&
-                    (server.connected ? (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          loading={busyId === server.id}
-                          onClick={() => void control(server, 'restart')}
-                          title="Restart server"
-                        >
-                          <RotateCw size={12} />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          loading={busyId === server.id}
-                          onClick={() => void control(server, 'stop')}
-                          title="Stop server"
-                        >
-                          <Square size={12} />
-                        </Button>
-                      </>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        loading={busyId === server.id}
-                        onClick={() => void control(server, 'start')}
-                        title="Start server"
-                      >
-                        <Play size={12} /> Start
-                      </Button>
-                    ))}
-                  <ActionMenu
-                    label={`${server.name} actions`}
-                    items={[
-                      { label: 'Open workspace', onSelect: () => navigate(`/servers/${server.id}`) },
-                      { label: 'Export configuration', onSelect: () => void exportBundle(server) },
-                    ]}
-                  />
-                </div>
-              </div>
-            </article>
+            />
           ))}
         </div>
       )}

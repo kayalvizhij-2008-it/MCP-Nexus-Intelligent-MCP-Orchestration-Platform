@@ -135,6 +135,7 @@ export function ServerDetailPage() {
         <ArrowLeft size={12} /> All servers
       </Link>
       <PageHeader
+        eyebrow="MCP server"
         title={server.name}
         subtitle={server.description || 'No description configured'}
         actions={

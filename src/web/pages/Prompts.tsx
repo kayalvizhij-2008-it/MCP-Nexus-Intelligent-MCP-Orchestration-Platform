@@ -37,6 +37,7 @@ export function PromptsPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Infrastructure"
         title="Prompt Studio"
         subtitle="Inspect prompts registered by MCP servers and author reusable templates with dynamic arguments."
       />

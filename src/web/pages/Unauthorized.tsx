@@ -7,7 +7,7 @@ import { Button, EmptyState, Panel } from '../components/ui.js';
 export function UnauthorizedPage() {
   return (
     <div className="fade-in">
-      <PageHeader title="Unauthorized" subtitle="You do not have permission to view this resource." />
+      <PageHeader eyebrow="403" title="Unauthorized" subtitle="You do not have permission to view this resource." />
       <Panel>
         <EmptyState
           icon={<Lock size={20} />}

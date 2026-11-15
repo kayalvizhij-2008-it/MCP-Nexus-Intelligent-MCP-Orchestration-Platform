@@ -143,6 +143,7 @@ export function SecurityPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Trust"
         title="Security Center"
         subtitle="Identity, role-based access control, approval gates, encrypted secrets and the audit trail."
         actions={

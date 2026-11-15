@@ -21,6 +21,7 @@ export function Panel({
   className,
   bodyClassName,
   flush,
+  signal,
 }: {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
@@ -29,9 +30,10 @@ export function Panel({
   className?: string;
   bodyClassName?: string;
   flush?: boolean;
+  signal?: boolean;
 }) {
   return (
-    <section className={cn('panel', className)}>
+    <section className={cn('panel', signal && 'panel-signal', className)}>
       {(title || actions) && (
         <header className="panel-head">
           <div className="min-w-0">
@@ -85,7 +87,7 @@ export function Badge({
   children,
   className,
 }: {
-  tone?: 'ok' | 'warn' | 'err' | 'info' | 'violet' | 'muted';
+  tone?: 'ok' | 'warn' | 'err' | 'info' | 'violet' | 'coral' | 'muted';
   children: React.ReactNode;
   className?: string;
 }) {
@@ -266,12 +268,24 @@ export function StatCard({
   label: string;
   value: React.ReactNode;
   sub?: React.ReactNode;
-  tone?: 'ok' | 'warn' | 'err' | 'info' | 'violet';
+  tone?: 'ok' | 'warn' | 'err' | 'info' | 'violet' | 'coral';
   icon?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   return (
-    <div className="panel relative overflow-hidden p-4">
+    <div className="panel group relative overflow-hidden p-4 transition-colors duration-200 hover:border-line-strong">
+      <span
+        className={cn(
+          'pointer-events-none absolute inset-x-0 top-0 h-px opacity-70 transition-opacity duration-300 group-hover:opacity-100',
+          tone === 'ok' && 'bg-gradient-to-r from-transparent via-ok/70 to-transparent',
+          tone === 'warn' && 'bg-gradient-to-r from-transparent via-warn/70 to-transparent',
+          tone === 'err' && 'bg-gradient-to-r from-transparent via-err/70 to-transparent',
+          tone === 'coral' && 'bg-gradient-to-r from-transparent via-coral/70 to-transparent',
+          (!tone || tone === 'info' || tone === 'violet') &&
+            'bg-gradient-to-r from-transparent via-accent/70 to-transparent',
+        )}
+        aria-hidden
+      />
       <div className="flex items-start justify-between gap-2">
         <div className="stat-label">{label}</div>
         {icon && (
@@ -280,9 +294,10 @@ export function StatCard({
               'flex h-6 w-6 items-center justify-center rounded-md border',
               tone === 'ok' && 'border-ok/20 bg-ok/10 text-ok',
               tone === 'warn' && 'border-warn/20 bg-warn/10 text-warn',
-              tone === 'err' && 'border-err/20 bg-err/10 text-err',
-              tone === 'violet' && 'border-violet/20 bg-violet/10 text-violet',
-              (!tone || tone === 'info') && 'border-accent/20 bg-accent/10 text-accent-soft',
+              tone === 'err' && 'border-err/20 bg-err/10 text-coral-soft',
+              tone === 'coral' && 'border-coral/25 bg-coral/10 text-coral',
+              tone === 'violet' && 'border-ice/25 bg-ice/10 text-ice',
+              (!tone || tone === 'info') && 'border-accent/25 bg-accent/10 text-accent-soft',
             )}
           >
             {icon}
@@ -315,7 +330,7 @@ export function Sparkline({
     .map((value, index) => `${index * step},${height - (value / max) * (height - 4) - 2}`)
     .join(' ');
   const color =
-    tone === 'ok' ? '#34d399' : tone === 'err' ? '#f87171' : tone === 'violet' ? '#8b5cf6' : '#4d7cff';
+    tone === 'ok' ? '#35d6a0' : tone === 'err' ? '#ff8066' : tone === 'violet' ? '#69d6f5' : '#16b8a6';
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
       <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
@@ -405,7 +420,7 @@ export function Modal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-4 pt-[8vh] backdrop-blur-sm">
-      <div className={cn('panel fade-in w-full bg-surface-850', width)}>
+      <div className={cn('panel fade-in w-full bg-surface-850 panel-signal', width)}>
         <header className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
           <div>
             <h3 className="text-[14px] font-semibold text-white">{title}</h3>

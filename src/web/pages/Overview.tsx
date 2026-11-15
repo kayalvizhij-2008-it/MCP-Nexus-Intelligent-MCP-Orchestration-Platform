@@ -15,7 +15,6 @@ import {
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../App.js';
-import { PageHeader } from '../components/Layout.js';
 import { AnimatedNumber } from '../components/interactions.js';
 import {
   Badge,
@@ -75,23 +74,82 @@ export function OverviewPage() {
 
   return (
     <div>
-      <PageHeader
-        eyebrow="Control plane"
-        title={`Welcome back, ${session?.user.name.split(' ')[0] ?? 'operator'}`}
-        subtitle="Live state of every MCP server, tool and execution recorded by this control plane — computed from stored rows, not samples."
-        actions={
-          <div className="flex items-center gap-2">
-            {data.pendingApprovals > 0 && (
-              <Link to="/approvals" className="btn btn-sm border-warn/30 bg-warn/10 text-warn hover:bg-warn/15">
-                <ShieldCheck size={12} /> {data.pendingApprovals} awaiting approval
+      {/* ------------------------------ command deck ------------------------ */}
+      <section className="panel panel-signal relative mb-4 overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-90"
+          style={{
+            background:
+              'radial-gradient(60% 120% at 8% 0%, rgba(22,184,166,0.14), transparent 62%), radial-gradient(45% 100% at 92% 10%, rgba(105,214,245,0.1), transparent 66%)',
+          }}
+          aria-hidden
+        />
+        <div className="relative grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.5fr_1fr] lg:items-center">
+          <div className="min-w-0">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/[0.07] px-2.5 py-1">
+              <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(22,184,166,0.9)]" />
+              <span className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-accent-soft">
+                control plane · {data.servers.running}/{data.servers.total} live
+              </span>
+            </div>
+            <h1 className="mt-3 text-[24px] font-semibold leading-tight tracking-[-0.03em] text-white sm:text-[30px]">
+              Welcome back, {session?.user.name.split(' ')[0] ?? 'operator'}
+            </h1>
+            <p className="mt-2 max-w-[560px] text-[12px] leading-relaxed text-slate-400">
+              Live state of every MCP server, tool and execution recorded by this control plane —
+              computed from stored rows, not samples.
+            </p>
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <Link to="/playground" className="btn btn-primary btn-sm">
+                <Zap size={12} /> Open playground
               </Link>
-            )}
-            <Link to="/playground" className="btn btn-primary btn-sm">
-              <Zap size={12} /> Open playground
-            </Link>
+              <Link to="/servers" className="btn btn-sm">
+                <Server size={12} /> Manage servers
+              </Link>
+              {data.pendingApprovals > 0 ? (
+                <Link
+                  to="/approvals"
+                  className="btn btn-sm border-coral/30 bg-coral/10 text-coral-soft hover:bg-coral/15"
+                >
+                  <ShieldCheck size={12} /> {data.pendingApprovals} awaiting approval
+                </Link>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface-900/60 px-2 py-1 text-[10.5px] text-slate-500">
+                  <ShieldCheck size={11} /> no approvals pending
+                </span>
+              )}
+            </div>
           </div>
-        }
-      />
+
+          <div className="grid grid-cols-3 gap-2 border-t border-line/70 pt-4 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
+            {[
+              { label: 'Tools', value: data.tools.total, icon: Wrench },
+              { label: 'Resources', value: data.resources.total, icon: FolderTree },
+              { label: 'Prompts', value: data.prompts.total, icon: Activity },
+            ].map((item) => (
+              <div key={item.label} className="rounded-lg border border-line/70 bg-surface-950/40 px-3 py-2.5">
+                <item.icon size={11} className="text-accent/70" />
+                <div className="mt-2 text-[17px] font-semibold leading-none text-slate-50">
+                  <AnimatedNumber value={item.value} />
+                </div>
+                <div className="mt-1 text-[9.5px] uppercase tracking-[0.14em] text-slate-600">
+                  {item.label}
+                </div>
+              </div>
+            ))}
+            <div className="col-span-3 flex items-center justify-between rounded-lg border border-line/70 bg-surface-950/40 px-3 py-2">
+              <span className="flex items-center gap-1.5 text-[10px] text-slate-500">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent pulse-dot" />
+                {data.servers.running} running · {data.servers.stopped} stopped
+                {data.servers.errors > 0 ? ` · ${data.servers.errors} failed` : ''}
+              </span>
+              <span className="mono text-[9.5px] text-slate-600">
+                {formatNumber(data.requests.allTime)} calls logged
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {needsOnboarding && (
         <Panel className="mb-3 border-accent/25" bodyClassName="flex flex-wrap items-center gap-4 p-4">
@@ -197,13 +255,13 @@ export function OverviewPage() {
         <Panel title="Success distribution" subtitle="Recorded outcomes over the last 24 hours">
           <div className="flex items-center gap-5">
             <svg width="96" height="96" viewBox="0 0 88 88" className="shrink-0" role="img" aria-label="Success rate">
-              <circle cx="44" cy="44" r="34" fill="none" stroke="#1b2436" strokeWidth="7" />
+              <circle cx="44" cy="44" r="34" fill="none" stroke="#1e2f45" strokeWidth="7" />
               <circle
                 cx="44"
                 cy="44"
                 r="34"
                 fill="none"
-                stroke={successRate === null ? '#2a3852' : successRate >= 95 ? '#35d6a0' : successRate >= 80 ? '#f5b95f' : '#ff647c'}
+                stroke={successRate === null ? '#334a68' : successRate >= 95 ? '#35d6a0' : successRate >= 80 ? '#f2c46b' : '#ff8066'}
                 strokeWidth="7"
                 strokeLinecap="round"
                 strokeDasharray={`${ring.dash} ${ring.circumference}`}

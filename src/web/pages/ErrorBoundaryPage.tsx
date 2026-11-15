@@ -7,7 +7,7 @@ import { Button, EmptyState, Panel } from '../components/ui.js';
 export function ErrorBoundaryPage({ message, onReset }: { message?: string; onReset?: () => void }) {
   return (
     <div className="fade-in">
-      <PageHeader title="Something went wrong" subtitle="An unexpected error occurred while rendering this page." />
+      <PageHeader eyebrow="Runtime error" title="Something went wrong" subtitle="An unexpected error occurred while rendering this page." />
       <Panel>
         <EmptyState
           icon={<AlertTriangle size={20} />}

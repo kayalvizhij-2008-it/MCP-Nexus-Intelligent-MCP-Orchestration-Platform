@@ -58,6 +58,7 @@ export function ResourcesPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Infrastructure"
         title="Resource Explorer"
         subtitle="Static resources and URI templates discovered from every connected MCP server, read over the real protocol."
         actions={<Badge tone="info">{rows.length} resources</Badge>}

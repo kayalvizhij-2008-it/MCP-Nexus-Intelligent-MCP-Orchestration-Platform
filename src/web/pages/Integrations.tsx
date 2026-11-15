@@ -118,6 +118,7 @@ export function IntegrationsPage() {
   return (
     <div className="fade-in">
       <PageHeader
+        eyebrow="Ecosystem"
         title="Integration Hub"
         subtitle="External systems are only marked connected after a real credential check. Unconfigured providers stay disconnected."
         actions={

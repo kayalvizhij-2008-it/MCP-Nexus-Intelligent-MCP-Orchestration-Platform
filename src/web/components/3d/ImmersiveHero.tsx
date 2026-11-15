@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import React, { useEffect, useRef, useState } from 'react';
+import { createFloatingShapes } from './FloatingShapes.js';
 import { createNetworkCore } from './MCPNetworkCore.js';
 import { createNetworkConnections } from './NetworkConnections.js';
 import { createNetworkParticles } from './NetworkParticles.js';
@@ -11,20 +12,21 @@ function HeroFallback() {
       <svg viewBox="0 0 400 400" className="h-[78%] w-auto opacity-70">
         <defs>
           <radialGradient id="hero-fallback-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#7c5cff" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#7c5cff" stopOpacity="0" />
+            <stop offset="0%" stopColor="#16b8a6" stopOpacity="0.5" />
+            <stop offset="70%" stopColor="#69d6f5" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#69d6f5" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx="200" cy="200" r="150" fill="url(#hero-fallback-glow)" />
-        <circle cx="200" cy="200" r="46" fill="#0d1320" stroke="#9b8cff" strokeWidth="1.2" />
+        <circle cx="200" cy="200" r="46" fill="#101a2c" stroke="#5fe3d1" strokeWidth="1.2" />
         {Array.from({ length: 8 }).map((_, index) => {
           const angle = (index / 8) * Math.PI * 2;
           const x = 200 + Math.cos(angle) * 132;
           const y = 200 + Math.sin(angle) * 132;
           return (
             <g key={index}>
-              <line x1="200" y1="200" x2={x} y2={y} stroke="#2a3852" strokeWidth="1" />
-              <circle cx={x} cy={y} r="5" fill={index % 2 ? '#36c9f0' : '#9b8cff'} />
+              <line x1="200" y1="200" x2={x} y2={y} stroke="#334a68" strokeWidth="1" />
+              <circle cx={x} cy={y} r="5" fill={index === 2 ? '#ff8066' : index % 2 ? '#69d6f5' : '#5fe3d1'} />
             </g>
           );
         })}
@@ -80,7 +82,8 @@ export function ImmersiveHero({ className }: { className?: string }) {
     const core = createNetworkCore({ nodeCount: isCompact ? 6 : 8 });
     const connections = createNetworkConnections(core.nodes, { packetsPerLink: isCompact ? 1 : 2 });
     const particles = createNetworkParticles({ count: isCompact ? 240 : 560 });
-    scene.add(core.object, connections.object, particles.object);
+    const shapes = createFloatingShapes();
+    scene.add(core.object, connections.object, particles.object, shapes.object);
 
     const pointer = { x: 0, y: 0 };
     const smoothed = { x: 0, y: 0 };
@@ -103,6 +106,7 @@ export function ImmersiveHero({ className }: { className?: string }) {
       core.update(elapsed, smoothed);
       connections.update(elapsed);
       particles.update(elapsed);
+      shapes.update(elapsed);
       camera.position.x = smoothed.x * 0.32;
       camera.position.y = 0.15 - smoothed.y * 0.24;
       camera.lookAt(0, 0, 0);
@@ -163,6 +167,7 @@ export function ImmersiveHero({ className }: { className?: string }) {
       core.dispose();
       connections.dispose();
       particles.dispose();
+      shapes.dispose();
       scene.clear();
       renderer.dispose();
       renderer.forceContextLoss?.();
