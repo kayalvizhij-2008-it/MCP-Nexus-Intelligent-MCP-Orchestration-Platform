@@ -278,6 +278,33 @@ docs/                   Architecture and API reference
 
 Full threat model and the findings fixed in this pass: [docs/SECURITY.md](docs/SECURITY.md).
 
+## Render deployment
+
+A production-ready `render.yaml` blueprint is included. It deploys the existing
+`Dockerfile` (Node 22, non-root user) and provisions a **persistent disk** at
+`/app/data` for SQLite, the master key and the workspace.
+
+Steps:
+
+1. Create a new Render **Web Service** from this repository (Docker runtime).
+2. Render reads `render.yaml`; or configure manually:
+   - Dockerfile path: `./Dockerfile`, context: `.`
+   - Health check path: `/api/health`
+   - Disk: name `mcp-nexus-data`, mount `/app/data`, size 1 GB
+3. Set environment variables in the dashboard (never commit them):
+   - `NODE_ENV=production`
+   - `HOST=0.0.0.0`
+   - `MCPNEXUS_COOKIE_SECURE=true`
+   - `MCPNEXUS_ADMIN_EMAIL` (optional, default `admin@mcpnexus.local`)
+   - `MCPNEXUS_ADMIN_PASSWORD` (recommended; otherwise read from `/app/data/initial-admin.txt`)
+   - `MCPNEXUS_MASTER_KEY` (optional; generated on first boot if absent)
+4. Deploy. Verify `GET /api/health` returns `{ ok: true, database: true }`.
+5. Back up `/app/data/master.key` together with the database.
+
+**Important:** Render free-tier disks are not persistent across some plan changes;
+use a paid plan with a persistent disk for production data. MCP STDIO child
+processes run inside the container (Node is available in the image).
+
 ## Known limitations
 
 - **Single-node.** Sessions, rate limits and MCP connections live in the process; there is no horizontal scaling.

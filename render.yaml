@@ -1,0 +1,30 @@
+# Render Blueprint for MCP Nexus
+# Deploy this repository as a Docker web service.
+# Persistent storage is required because the app uses SQLite + MCP child processes.
+
+services:
+  - type: web
+    name: mcp-nexus
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: "0.0.0.0"
+      - key: MCPNEXUS_COOKIE_SECURE
+        value: "true"
+      - key: MCPNEXUS_ADMIN_EMAIL
+        value: admin@mcpnexus.local
+      - key: MCPNEXUS_ADMIN_PASSWORD
+        sync: false   # set manually in Render dashboard; never commit
+      - key: MCPNEXUS_MASTER_KEY
+        sync: false   # optional; generated on first boot if absent
+    disk:
+      name: mcp-nexus-data
+      mountPath: /app/data
+      sizeGB: 1
