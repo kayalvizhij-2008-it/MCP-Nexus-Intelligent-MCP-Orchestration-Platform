@@ -1,5 +1,5 @@
 import React, { createContext, lazy, Suspense, useCallback, useContext, useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout.js';
 import { Spinner, ToastProvider } from './components/ui.js';
 import { api, type UserDto } from './lib/api.js';
@@ -10,6 +10,7 @@ const DeploymentsPage = lazy(() => import('./pages/Deployments.js').then((m) => 
 const ExecutionsPage = lazy(() => import('./pages/Executions.js').then((m) => ({ default: m.ExecutionsPage })));
 const IntegrationsPage = lazy(() => import('./pages/Integrations.js').then((m) => ({ default: m.IntegrationsPage })));
 const LandingPage = lazy(() => import('./pages/Landing.js').then((m) => ({ default: m.LandingPage })));
+const LoginPageLazy = lazy(() => import('./pages/Login.js').then((m) => ({ default: m.LoginPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFound.js').then((m) => ({ default: m.NotFoundPage })));
 const ObservabilityPage = lazy(() => import('./pages/Observability.js').then((m) => ({ default: m.ObservabilityPage })));
 const OverviewPage = lazy(() => import('./pages/Overview.js').then((m) => ({ default: m.OverviewPage })));
@@ -125,8 +126,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
 function Shell() {
   const { session, loading } = useAuth();
+  const location = useLocation();
   if (loading) return <BootScreen />;
-  // Signed out: the product landing page doubles as the entry point.
+  const authRoute = location.pathname === '/login' || location.pathname === '/register';
+  // Signed out: auth pages render the login/register form; otherwise the landing page.
+  if (!session && authRoute) {
+    return (
+      <Suspense fallback={<BootScreen />}>
+        <LoginPageLazy />
+      </Suspense>
+    );
+  }
   if (!session) return (
     <Suspense fallback={<BootScreen />}>
       <LandingPage />
@@ -154,6 +164,7 @@ function Shell() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="/login" element={<Navigate to="/" replace />} />
+            <Route path="/register" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>

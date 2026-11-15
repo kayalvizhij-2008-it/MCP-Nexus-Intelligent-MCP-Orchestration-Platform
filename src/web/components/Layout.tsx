@@ -21,7 +21,7 @@ import {
   Menu,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App.js';
 import { api } from '../lib/api.js';
@@ -488,20 +488,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const Combined3DAccent = lazy(() =>
+  import('./3d/Combined3D.js').then((m) => ({ default: m.Combined3D })),
+);
+
 export function PageHeader({
   title,
   subtitle,
   actions,
   eyebrow,
+  threeD = true,
 }: {
   title: string;
   subtitle?: string;
   actions?: React.ReactNode;
   eyebrow?: string;
+  threeD?: boolean;
 }) {
   return (
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-line/60 pb-4">
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         {eyebrow && (
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/[0.07] px-2.5 py-1">
             <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(54,199,138,0.9)]" />
@@ -513,7 +519,16 @@ export function PageHeader({
         <h1 className="page-title">{title}</h1>
         {subtitle && <p className="page-sub max-w-2xl">{subtitle}</p>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      <div className="flex items-center gap-3">
+        {threeD && (
+          <div className="hidden h-20 w-28 shrink-0 overflow-hidden rounded-lg border border-line/60 bg-surface-900/40 md:block lg:h-24 lg:w-32">
+            <Suspense fallback={null}>
+              <Combined3DAccent className="h-full w-full" variant="accent" subtle />
+            </Suspense>
+          </div>
+        )}
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
+      </div>
     </div>
   );
 }

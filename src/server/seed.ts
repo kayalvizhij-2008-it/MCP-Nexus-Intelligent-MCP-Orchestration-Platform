@@ -69,6 +69,7 @@ export type BootstrapNotice = {
 
 export function seedDatabase(): BootstrapNotice | null {
   const notice = seedAdmin();
+  seedDemoUser();
   seedSettings();
   seedServers();
   seedPolicies();
@@ -116,6 +117,21 @@ function seedAdmin(): BootstrapNotice | null {
   );
 
   return { email: ADMIN_EMAIL, passwordFile };
+}
+
+function seedDemoUser() {
+  const existing = get('SELECT id FROM users WHERE lower(email) = lower(?)', 'demo@mcpnexus.com');
+  if (existing) return;
+  run(
+    'INSERT INTO users (id, email, name, password_hash, role, created_at, last_login_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    crypto.randomUUID(),
+    'demo@mcpnexus.com',
+    'Demo User',
+    hashPassword('MCPNexus@Demo2026'),
+    'viewer',
+    nowIso(),
+    null,
+  );
 }
 
 function seedSettings() {

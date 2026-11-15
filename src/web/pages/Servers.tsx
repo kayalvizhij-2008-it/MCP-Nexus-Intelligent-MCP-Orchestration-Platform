@@ -175,6 +175,7 @@ export function ServersPage() {
         eyebrow="Infrastructure"
         title="MCP Servers"
         subtitle="Register STDIO processes or Streamable HTTP endpoints. Starting a server performs a real MCP handshake and discovers its primitives."
+        threeD={false}
         actions={
           <div className="flex items-center gap-2">
             <Button size="sm" variant="ghost" onClick={() => void exportBundle()}>
