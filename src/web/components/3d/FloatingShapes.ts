@@ -48,7 +48,7 @@ export function createFloatingShapes(): Disposable {
 
   // glass ring — thin torus, ice blue
   add(new THREE.TorusGeometry(0.62, 0.012, 8, 96), new THREE.MeshBasicMaterial({
-    color: 0x69d6f5,
+    color: 0xA0E6BD,
     transparent: true,
     opacity: 0.5,
     blending: THREE.AdditiveBlending,
@@ -57,7 +57,7 @@ export function createFloatingShapes(): Disposable {
 
   // faceted crystal — teal wire
   add(new THREE.OctahedronGeometry(0.34, 0), new THREE.MeshBasicMaterial({
-    color: 0x5fe3d1,
+    color: 0xA0E6BD,
     wireframe: true,
     transparent: true,
     opacity: 0.55,
@@ -65,7 +65,7 @@ export function createFloatingShapes(): Disposable {
 
   // soft wire sphere — silver
   add(new THREE.IcosahedronGeometry(0.26, 1), new THREE.MeshBasicMaterial({
-    color: 0xc2cede,
+    color: 0xC5D0CA,
     wireframe: true,
     transparent: true,
     opacity: 0.22,
@@ -73,13 +73,13 @@ export function createFloatingShapes(): Disposable {
 
   // two small solid cubes — coral + ice
   add(new THREE.BoxGeometry(0.16, 0.16, 0.16), new THREE.MeshBasicMaterial({
-    color: 0xff8066,
+    color: 0xD9B978,
     transparent: true,
     opacity: 0.85,
   }), { x: -2.4, y: -1.05, z: 0.5, spin: 0.5, bob: 0.1, phase: 2.2 });
 
   add(new THREE.BoxGeometry(0.12, 0.12, 0.12), new THREE.MeshBasicMaterial({
-    color: 0x69d6f5,
+    color: 0xA0E6BD,
     transparent: true,
     opacity: 0.8,
   }), { x: -1.55, y: -1.45, z: -0.3, spin: 0.62, bob: 0.12, phase: 4.4 });

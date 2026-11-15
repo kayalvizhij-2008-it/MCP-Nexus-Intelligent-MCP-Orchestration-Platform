@@ -17,8 +17,8 @@ export function createNetworkConnections(
   const geometry = new THREE.BufferGeometry();
   const positions: number[] = [];
   const colors: number[] = [];
-  const warm = new THREE.Color(0x16b8a6);
-  const cool = new THREE.Color(0x69d6f5);
+  const warm = new THREE.Color(0x36C78A);
+  const cool = new THREE.Color(0xA0E6BD);
 
   for (const node of nodes) {
     positions.push(origin.x, origin.y, origin.z, node.x, node.y, node.z);
@@ -42,7 +42,7 @@ export function createNetworkConnections(
   const packetPositions = new Float32Array(packetCount * 3);
   packetGeometry.setAttribute('position', new THREE.BufferAttribute(packetPositions, 3));
   const packetMaterial = new THREE.PointsMaterial({
-    color: 0xc8fbff,
+    color: 0xA0E6BD,
     size: 0.055,
     transparent: true,
     opacity: 0.9,

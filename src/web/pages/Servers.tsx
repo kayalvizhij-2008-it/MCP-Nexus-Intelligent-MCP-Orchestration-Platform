@@ -12,7 +12,9 @@ import {
   Upload,
   Wrench,
 } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { Suspense, lazy, useMemo, useState } from 'react';
+const Combined3D = lazy(() => import('../components/3d/Combined3D.js'));
+
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../App.js';
 import { PageHeader } from '../components/Layout.js';
@@ -191,6 +193,12 @@ export function ServersPage() {
           </div>
         }
       />
+
+      <div className="mb-3 h-[120px] overflow-hidden rounded-xl border border-line/60 bg-surface-950/40 sm:h-[160px]">
+        <Suspense fallback={<div className="h-full w-full bg-surface-950/40" />}>
+          <Combined3D variant="accent" subtle />
+        </Suspense>
+      </div>
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <SegmentedControl

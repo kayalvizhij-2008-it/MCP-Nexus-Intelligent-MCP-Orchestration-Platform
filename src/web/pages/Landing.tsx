@@ -26,7 +26,7 @@ import { FlipCard } from '../components/interactions.js';
 import { LoginCard } from './Login.js';
 import { useApi } from '../lib/useApi.js';
 
-const ImmersiveHero = lazy(() => import('../components/3d/ImmersiveHero.js'));
+const Combined3D = lazy(() => import('../components/3d/Combined3D.js'));
 
 type Health = { ok: boolean; status: string; servers: { total: number; connected: number } };
 
@@ -41,14 +41,14 @@ function Brand({ compact }: { compact?: boolean }) {
             strokeWidth="1.6"
             strokeLinejoin="round"
           />
-          <circle cx="16" cy="16" r="3.1" fill="#16b8a6" />
-          <circle cx="16" cy="8" r="1.3" fill="#69d6f5" />
-          <circle cx="23" cy="20" r="1.3" fill="#69d6f5" />
-          <circle cx="9" cy="20" r="1.3" fill="#ff8066" />
+          <circle cx="16" cy="16" r="3.1" fill="#36C78A" />
+          <circle cx="16" cy="8" r="1.3" fill="#A0E6BD" />
+          <circle cx="23" cy="20" r="1.3" fill="#A0E6BD" />
+          <circle cx="9" cy="20" r="1.3" fill="#D9B978" />
           <defs>
             <linearGradient id="landing-mark" x1="4" y1="4" x2="28" y2="28">
-              <stop stopColor="#5fe3d1" />
-              <stop offset="1" stopColor="#69d6f5" />
+              <stop stopColor="#A0E6BD" />
+              <stop offset="1" stopColor="#A0E6BD" />
             </linearGradient>
           </defs>
         </svg>
@@ -306,7 +306,7 @@ export function LandingPage() {
           className="pointer-events-none absolute left-1/2 top-[-18%] -z-10 h-[560px] w-[880px] -translate-x-1/2 opacity-70 blur-2xl"
           style={{
             background:
-              'radial-gradient(closest-side, rgba(22,184,166,0.22), rgba(105,214,245,0.08) 55%, transparent 75%)',
+              'radial-gradient(closest-side, rgba(54,199,138,0.22), rgba(160,230,189,0.08) 55%, transparent 75%)',
           }}
           aria-hidden
         />
@@ -376,7 +376,7 @@ export function LandingPage() {
                 </div>
               }
             >
-              <ImmersiveHero className="absolute inset-0" />
+              <Combined3D className="absolute inset-0" variant="hero" />
             </Suspense>
             <div className="scanline pointer-events-none absolute inset-x-8 inset-y-10 rounded-full" aria-hidden />
             <div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full border border-line/80 bg-surface-900/80 px-3 py-1 text-[9.5px] uppercase tracking-[0.18em] text-slate-400 backdrop-blur">
@@ -528,8 +528,8 @@ export function LandingPage() {
               <path data-draw d="M1 0 L1 100" stroke="url(#workflow-line)" strokeWidth="1.4" fill="none" />
               <defs>
                 <linearGradient id="workflow-line" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#16b8a6" />
-                  <stop offset="100%" stopColor="#69d6f5" stopOpacity="0.1" />
+                  <stop offset="0%" stopColor="#36C78A" />
+                  <stop offset="100%" stopColor="#A0E6BD" stopOpacity="0.1" />
                 </linearGradient>
               </defs>
             </svg>
@@ -818,7 +818,7 @@ export function LandingPage() {
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
             background:
-              'radial-gradient(40% 50% at 78% 50%, rgba(255,128,102,0.12), transparent 70%), radial-gradient(35% 45% at 12% 30%, rgba(22,184,166,0.1), transparent 70%)',
+              'radial-gradient(40% 50% at 78% 50%, rgba(217,185,120,0.12), transparent 70%), radial-gradient(35% 45% at 12% 30%, rgba(54,199,138,0.1), transparent 70%)',
           }}
           aria-hidden
         />
@@ -1028,17 +1028,17 @@ export function LandingPage() {
               <svg viewBox="0 0 520 320" className="w-full" role="img" aria-label="MCPNEXUS architecture diagram">
                 <defs>
                   <linearGradient id="arch-line" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#16b8a6" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#69d6f5" stopOpacity="0.9" />
+                    <stop offset="0%" stopColor="#36C78A" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#A0E6BD" stopOpacity="0.9" />
                   </linearGradient>
                   <linearGradient id="arch-core" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="#16b8a6" stopOpacity="0.16" />
-                    <stop offset="100%" stopColor="#69d6f5" stopOpacity="0.05" />
+                    <stop offset="0%" stopColor="#36C78A" stopOpacity="0.16" />
+                    <stop offset="100%" stopColor="#A0E6BD" stopOpacity="0.05" />
                   </linearGradient>
                 </defs>
 
                 <rect x="176" y="126" width="168" height="70" rx="11" fill="url(#arch-core)" stroke="#2c7f78" />
-                <text x="260" y="155" textAnchor="middle" fill="#e8edf5" fontSize="12" fontFamily="Inter, sans-serif" fontWeight="600">
+                <text x="260" y="155" textAnchor="middle" fill="#C5D0CA" fontSize="12" fontFamily="Inter, sans-serif" fontWeight="600">
                   Control plane
                 </text>
                 <text x="260" y="174" textAnchor="middle" fill="#7f95ae" fontSize="9.5" fontFamily="JetBrains Mono, monospace">
@@ -1059,7 +1059,7 @@ export function LandingPage() {
                   { x: 350, y: 204, label: 'Control (HTTP)', meta: '/mcp' },
                 ].map((node) => (
                   <g key={node.label}>
-                    <rect x={node.x} y={node.y} width="156" height="44" rx="8" fill="#0e1828" stroke="#22344c" />
+                    <rect x={node.x} y={node.y} width="156" height="44" rx="8" fill="#151c18" stroke="#263029" />
                     <text x={node.x + 14} y={node.y + 20} fill="#d9e2ee" fontSize="11" fontFamily="Inter, sans-serif" fontWeight="600">
                       {node.label}
                     </text>
@@ -1069,16 +1069,16 @@ export function LandingPage() {
                   </g>
                 ))}
 
-                <rect x="176" y="22" width="168" height="40" rx="8" fill="#0e1828" stroke="#22344c" />
+                <rect x="176" y="22" width="168" height="40" rx="8" fill="#151c18" stroke="#263029" />
                 <text x="260" y="47" textAnchor="middle" fill="#a4b4c9" fontSize="10.5" fontFamily="Inter, sans-serif">
                   Operators · API clients
                 </text>
-                <path data-draw d="M260 62 L260 126" stroke="#334a68" strokeWidth="1.2" fill="none" />
-                <rect x="176" y="252" width="168" height="40" rx="8" fill="#0e1828" stroke="#22344c" />
+                <path data-draw d="M260 62 L260 126" stroke="#3a4d42" strokeWidth="1.2" fill="none" />
+                <rect x="176" y="252" width="168" height="40" rx="8" fill="#151c18" stroke="#263029" />
                 <text x="260" y="277" textAnchor="middle" fill="#a4b4c9" fontSize="10.5" fontFamily="Inter, sans-serif">
                   SQLite · WAL · migrations
                 </text>
-                <path data-draw d="M260 196 L260 252" stroke="#334a68" strokeWidth="1.2" fill="none" />
+                <path data-draw d="M260 196 L260 252" stroke="#3a4d42" strokeWidth="1.2" fill="none" />
               </svg>
             </div>
           </Reveal>

@@ -12,21 +12,21 @@ function HeroFallback() {
       <svg viewBox="0 0 400 400" className="h-[78%] w-auto opacity-70">
         <defs>
           <radialGradient id="hero-fallback-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#16b8a6" stopOpacity="0.5" />
-            <stop offset="70%" stopColor="#69d6f5" stopOpacity="0.12" />
-            <stop offset="100%" stopColor="#69d6f5" stopOpacity="0" />
+            <stop offset="0%" stopColor="#36C78A" stopOpacity="0.5" />
+            <stop offset="70%" stopColor="#A0E6BD" stopOpacity="0.12" />
+            <stop offset="100%" stopColor="#A0E6BD" stopOpacity="0" />
           </radialGradient>
         </defs>
         <circle cx="200" cy="200" r="150" fill="url(#hero-fallback-glow)" />
-        <circle cx="200" cy="200" r="46" fill="#101a2c" stroke="#5fe3d1" strokeWidth="1.2" />
+        <circle cx="200" cy="200" r="46" fill="#191F1B" stroke="#A0E6BD" strokeWidth="1.2" />
         {Array.from({ length: 8 }).map((_, index) => {
           const angle = (index / 8) * Math.PI * 2;
           const x = 200 + Math.cos(angle) * 132;
           const y = 200 + Math.sin(angle) * 132;
           return (
             <g key={index}>
-              <line x1="200" y1="200" x2={x} y2={y} stroke="#334a68" strokeWidth="1" />
-              <circle cx={x} cy={y} r="5" fill={index === 2 ? '#ff8066' : index % 2 ? '#69d6f5' : '#5fe3d1'} />
+              <line x1="200" y1="200" x2={x} y2={y} stroke="#3a4d42" strokeWidth="1" />
+              <circle cx={x} cy={y} r="5" fill={index === 2 ? '#D9B978' : index % 2 ? '#A0E6BD' : '#A0E6BD'} />
             </g>
           );
         })}

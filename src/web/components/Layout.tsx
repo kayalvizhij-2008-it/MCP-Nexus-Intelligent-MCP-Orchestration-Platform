@@ -94,14 +94,14 @@ function Brand({ collapsed }: { collapsed?: boolean }) {
           strokeWidth="1.7"
           strokeLinejoin="round"
         />
-        <circle cx="16" cy="16" r="3.1" fill="#16b8a6" />
-        <circle cx="16" cy="8" r="1.3" fill="#69d6f5" />
-        <circle cx="23" cy="20" r="1.3" fill="#69d6f5" />
-        <circle cx="9" cy="20" r="1.3" fill="#ff8066" />
+        <circle cx="16" cy="16" r="3.1" fill="#36C78A" />
+        <circle cx="16" cy="8" r="1.3" fill="#A0E6BD" />
+        <circle cx="23" cy="20" r="1.3" fill="#A0E6BD" />
+        <circle cx="9" cy="20" r="1.3" fill="#D9B978" />
         <defs>
           <linearGradient id="nexus-grad-nav" x1="4" y1="4" x2="28" y2="28">
-            <stop stopColor="#5fe3d1" />
-            <stop offset="1" stopColor="#69d6f5" />
+            <stop stopColor="#A0E6BD" />
+            <stop offset="1" stopColor="#A0E6BD" />
           </linearGradient>
         </defs>
       </svg>
@@ -225,8 +225,8 @@ function SidebarNav({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?
                       layoutId="nav-active-surface"
                       className="absolute inset-0 -z-10 rounded-lg"
                       style={{
-                        background: 'linear-gradient(90deg, rgba(22,184,166,0.2), rgba(105,214,245,0.05))',
-                        boxShadow: 'inset 0 0 0 1px rgba(22,184,166,0.12)',
+                        background: 'linear-gradient(90deg, rgba(54,199,138,0.2), rgba(160,230,189,0.05))',
+                        boxShadow: 'inset 0 0 0 1px rgba(54,199,138,0.12)',
                       }}
                       transition={{ type: 'spring', stiffness: 420, damping: 34 }}
                     />
@@ -504,7 +504,7 @@ export function PageHeader({
       <div className="min-w-0">
         {eyebrow && (
           <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/[0.07] px-2.5 py-1">
-            <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(22,184,166,0.9)]" />
+            <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(54,199,138,0.9)]" />
             <span className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-accent-soft">
               {eyebrow}
             </span>

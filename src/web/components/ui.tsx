@@ -330,7 +330,7 @@ export function Sparkline({
     .map((value, index) => `${index * step},${height - (value / max) * (height - 4) - 2}`)
     .join(' ');
   const color =
-    tone === 'ok' ? '#35d6a0' : tone === 'err' ? '#ff8066' : tone === 'violet' ? '#69d6f5' : '#16b8a6';
+    tone === 'ok' ? '#36C78A' : tone === 'err' ? '#D9B978' : tone === 'violet' ? '#A0E6BD' : '#36C78A';
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
       <polyline points={points} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />

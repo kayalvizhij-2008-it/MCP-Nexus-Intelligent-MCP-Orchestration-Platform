@@ -12,7 +12,9 @@ import {
   Wrench,
   Zap,
 } from 'lucide-react';
-import React, { useMemo } from 'react';
+import React, { Suspense, lazy, useMemo } from 'react';
+const Combined3D = lazy(() => import('../components/3d/Combined3D.js'));
+
 import { Link } from 'react-router-dom';
 import { useAuth } from '../App.js';
 import { AnimatedNumber } from '../components/interactions.js';
@@ -80,14 +82,14 @@ export function OverviewPage() {
           className="pointer-events-none absolute inset-0 opacity-90"
           style={{
             background:
-              'radial-gradient(60% 120% at 8% 0%, rgba(22,184,166,0.14), transparent 62%), radial-gradient(45% 100% at 92% 10%, rgba(105,214,245,0.1), transparent 66%)',
+              'radial-gradient(60% 120% at 8% 0%, rgba(54,199,138,0.14), transparent 62%), radial-gradient(45% 100% at 92% 10%, rgba(160,230,189,0.1), transparent 66%)',
           }}
           aria-hidden
         />
         <div className="relative grid gap-6 p-5 sm:p-6 lg:grid-cols-[1.5fr_1fr] lg:items-center">
           <div className="min-w-0">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-accent/25 bg-accent/[0.07] px-2.5 py-1">
-              <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(22,184,166,0.9)]" />
+              <span className="h-1 w-1 rounded-full bg-accent shadow-[0_0_8px_rgba(54,199,138,0.9)]" />
               <span className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-accent-soft">
                 control plane · {data.servers.running}/{data.servers.total} live
               </span>
@@ -150,6 +152,12 @@ export function OverviewPage() {
           </div>
         </div>
       </section>
+
+      <div className="mb-4 h-[160px] overflow-hidden rounded-xl border border-line/60 bg-surface-950/40 sm:h-[200px]">
+        <Suspense fallback={<div className="h-full w-full bg-surface-950/40" />}>
+          <Combined3D variant="accent" subtle />
+        </Suspense>
+      </div>
 
       {needsOnboarding && (
         <Panel className="mb-3 border-accent/25" bodyClassName="flex flex-wrap items-center gap-4 p-4">
@@ -261,7 +269,7 @@ export function OverviewPage() {
                 cy="44"
                 r="34"
                 fill="none"
-                stroke={successRate === null ? '#334a68' : successRate >= 95 ? '#35d6a0' : successRate >= 80 ? '#f2c46b' : '#ff8066'}
+                stroke={successRate === null ? '#3a4d42' : successRate >= 95 ? '#36C78A' : successRate >= 80 ? '#D9B978' : '#D9B978'}
                 strokeWidth="7"
                 strokeLinecap="round"
                 strokeDasharray={`${ring.dash} ${ring.circumference}`}

@@ -98,7 +98,7 @@ export function LoginPage() {
         <div className="grid-lines absolute inset-0 opacity-40" />
         <div
           className="pointer-events-none absolute -left-24 top-1/3 h-[420px] w-[420px] rounded-full opacity-40 blur-3xl"
-          style={{ background: 'radial-gradient(circle, rgba(22,184,166,0.35), transparent 65%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(54,199,138,0.35), transparent 65%)' }}
         />
         <div className="relative">
           <div className="flex items-center gap-2.5">
@@ -109,11 +109,11 @@ export function LoginPage() {
                 strokeWidth="1.6"
                 strokeLinejoin="round"
               />
-              <circle cx="16" cy="16" r="3.2" fill="#16b8a6" />
+              <circle cx="16" cy="16" r="3.2" fill="#36C78A" />
               <defs>
                 <linearGradient id="login-mark" x1="4" y1="4" x2="28" y2="28">
-                  <stop stopColor="#5fe3d1" />
-                  <stop offset="1" stopColor="#69d6f5" />
+                  <stop stopColor="#A0E6BD" />
+                  <stop offset="1" stopColor="#A0E6BD" />
                 </linearGradient>
               </defs>
             </svg>
